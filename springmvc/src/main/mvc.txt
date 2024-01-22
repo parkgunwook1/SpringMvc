@@ -39,3 +39,19 @@ GET 쿼리 파라미터 전송 방식이든, POST HTML FORM 전송 방식이든 
 이것을 간단히 요청 파라미터(request parameter)조회라 한다.
 
 JAR를 사용하면 webapp 경로를 사용할 수 없다. 이제부터 정적 리소스도 클래스 경로에 함께 포함해야한다.
+
+
+"프로퍼티"
+- 객체에 getUsername(), setUsername() 메서드가 있으면, 이 객체는 username 이라는 프로퍼티를 가지고 있다.
+  username 프로퍼티의 값을 변경하면 setUsername()이 호출되고, 조회하면 getUsername()이 호출된다.
+
+스프링은 해당 생략시 다음과 같은 규칙을 적용한다.
+- String, int ,Integer 같은 단순 타입 == @RequestParam
+- 나머지 = @ModelAttribute
+
+HTTP message body에 데이터를 직접 담아서 요청
+- JSON, XML, TEXT 등
+요청 파라미터와 다르게, HTTP 메시지 바디를 통해 데이터가 직접 넘어오는 경우는 @RequestParam, @ModelAttribute를 사용할 수 없다.
+
+요청 파라미터를 조회하는 기능 : @RequestParam , @ModelAttribute
+Http 메시지 바디를 직접 조회하는 기능 : @ResponseBody

@@ -1,9 +1,11 @@
 package hello.springmvc.basic.request;
 
+import hello.springmvc.basic.HelloData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,10 +37,10 @@ public class RequestParamController {
             @RequestParam("username") String memberName, // request.getParamter와 같은 효과가 있다.
             @RequestParam("age") int memberAge) {
 
-        log.info("username={}, age={}" , memberName,memberAge);
+        log.info("username={}, age={}", memberName, memberAge);
 
         return "ok"; // 클래스 레벨에서 @RestController 를 사용해서 http body에 데이터를 찍을 수 있지만,
-                     // @ResponseBody를 메서드 레벨에서 사용해도 return "ok" 데이터를 body에 찍을 수 있다.
+        // @ResponseBody를 메서드 레벨에서 사용해도 return "ok" 데이터를 body에 찍을 수 있다.
     }
 
     @ResponseBody
@@ -47,7 +49,7 @@ public class RequestParamController {
             @RequestParam String username,
             @RequestParam int age) {
 
-        log.info("username={}, age={}" , username,age);
+        log.info("username={}, age={}", username, age);
         return "ok";
     }
 
@@ -55,7 +57,7 @@ public class RequestParamController {
     @RequestMapping("/request-param-v4")
     public String requestParamV4(String username, int age) { // String, int, Integer 등의 단순 타입이면 @RequestParam 생략 가능
 
-        log.info("username={}, age={}" , username, age);
+        log.info("username={}, age={}", username, age);
         return "ok";
 
         // @RequestParam이 있으면 명확하게 요청 파라미터에서 데이터를 읽는 다는 것을 알 수 있기 때문에 생략은 하지말자.
@@ -75,9 +77,8 @@ public class RequestParamController {
     }
 
     /**
-     * @RequestParam
-     * - defaultValue 사용
-     *
+     * @RequestParam - defaultValue 사용
+     * <p>
      * 참고: defaultValue는 빈 문자의 경우에도 적용
      * /request-param-default?username=
      */
@@ -104,6 +105,29 @@ public class RequestParamController {
         return "ok";
 
         // 파라미터의 값이 1개가 확실하다면 Map을 사용해도 되지만, 그렇지 않다면 MultiValueMap을 사용하자.
+    }
+
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+    /*
+    * @ModelAttribute 가 있으면 HelloData 객체를 생성한다.
+    * 요청 파라미터 이름으로 HellData 객체의 프로퍼티를 찾고 해당 프로퍼티의 setter를 호출해서 파라미터의 값을 입력(바인딩) 한다.
+    * */
+
+        log.info("username={}, age={}", helloData.getUsername(),
+                helloData.getAge());
+
+        return "ok";
+    }
+
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2( HelloData helloData) { // @ModelAttribute 생략가능
+        log.info("username={}, age={}", helloData.getUsername(),
+                helloData.getAge());
+
+        return "ok";
     }
 
 }
