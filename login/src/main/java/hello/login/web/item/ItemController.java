@@ -23,6 +23,9 @@ public class ItemController {
 
     private final ItemRepository itemRepository;
 
+    // 만약 필터를 작성 안할시, 아래의 모든 로직에 로그인이 안되어 있을때 로그인 페이징 이동 및 공통적인 코드를
+    // 많이 넣어야한다.
+
     @GetMapping
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
