@@ -1,5 +1,6 @@
 package hello.typeconverter.controller;
 
+import hello.typeconverter.type.IpPort;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +24,15 @@ public class HelloController {
     public String helloV2(@RequestParam Integer data) {
         System.out.println("data = " + data);
         return "ok";
+    // 스프링 MVC 요청 파라미터 @RequestParam , @ModelAttribute, @PathVariable 등등 타입 변환을 해준다.
     }
-    // 스프링 MVX 요청 파라미터 @RequestParam , @ModelAttribute, @PathVariable 등등 타입 변환을 해준다.
+
+    @GetMapping("/ip-port")
+    public String ipPort(@RequestParam IpPort ipPort) {
+        System.out.println("ipPort IP = " + ipPort.getIp());
+        System.out.println("ipPort PORT = " + ipPort.getPort());
+        return "ok";
+    }
 
 
 
