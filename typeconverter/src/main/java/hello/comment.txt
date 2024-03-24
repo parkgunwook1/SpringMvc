@@ -16,3 +16,41 @@ Http 요청 파라미터는 모두 문자로 처리된다.
 컨버터를 사용하려면 org.springframework.core.convert.converter.Converter 인터페이스를 구현하면 된다.
 "주의"
 Converter 라는 이름의 인터페이스가 많으니 조심해야한다.
+
+인터페이스 분리 원칙 ISP
+인터페이스 분리 원칙은 클라이언트가 자신이 이용하지 않는 메서드에 의존하지 않아야 한다.
+
+DefaultConversionService 는 다음 두 인터페이스를 구현했다.
+    - ConversionService : 컨버터 사용에 초점
+    - ConverterRegistry : 컨버터 등록에 초점
+
+이렇게 인터페이스를 분리하면 컨버터를 사용하는 클라이언트와 컨버터를 등록하고 관리하는 클라이언트의 관심사를 명확하게 분리할 수 있다.
+특히 컨버터를 사용하는 클라이언트는 ConversionService만 의존하면 되므로, 컨버터를 어떻게 등록하고 관리하는지는 전혀 몰라도 된다.
+결과적으로 컨버터를 사용하는 클라이언트는 꼭 필요한 메서드만 알게된다.
+이렇게 인터페이스를 분리하는 것을 'ISP' 라 한다.
+
+@RequestParam은 @RequestParam을 처리하는 ArgumentResolver인 RequestParamMethodArgumentResolver에서
+ConversionService를 사용해서 타입을 변환한다.
+
+"포맷터 - Formatter"
+Converter는 입력과 출력 타입에 제한이 없는, 범용 타입 변환 기능을 제공한다.
+이번에는 일반적인 웹 애플리케이션 환경을 생각해보자. 불린 타입을 숫자로 바꾸는 것 같은 범용 기능 보다는 개발자 입장에서는
+문자를 다른 타입으로 변환하거나, 다른 타입을 문자로 변환하는 상황이 대부분이다.
+앞서 코딩한 예제들을 떠올려 보면 문자를 다른 객체로 변환하거나 객체를 문자로 변환하는 일이 대부분이다.
+
+"웹 애플리케이션에서 객체를 문자로, 문자를 객체로 변환하는 예"
+- 1100인 정수를 1,000 문자열로 변환
+- 1,000 문자를 1000 정수로 변환
+- 날짜 객체 문자인 "2021-01-01 10:50:11" 출력하거나 또는 반대인 상황
+
+이렇게 객체를 특정한 포맷에 맞추어 문자로 출력하거나 또는 그 반대의 역할을 하는 것이 특화된 기능이 바로 포맷터(Formatter)이다.
+포맷터는 컨버터의 특별한 버전으로 이해하면 된다.
+
+Converter Vs Fomatter
+- Converter는 객체 -> 객체
+- Formatter는 객체 -> 문자, 문자 -> 객체 + 현지화(Locale)
+    - Converter의 특별한 버전
+
+포맷터는 객체를 문자로 변경하고, 문자를 객체로 변경하는 두 가지 기능을 모두 수행한다.
+- String print(T object, Locale locale) : 객체를 문자로 변경한다.
+- T parse(String text, Locale locale) : 문자를 객체로 변경한다.
